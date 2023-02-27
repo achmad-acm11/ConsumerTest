@@ -27,20 +27,20 @@
                 <p class="h3">Update Consumer</p>
                 <form id="update_form" method="post">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="name" name="name" value="${consumer.name}">
+                        <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" value="${consumer.name}" required>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Alamat</label>
                         <textarea class="form-control" id="address" rows="3" name="address">${consumer.address}</textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="city" class="form-label">Kota</label>
-                        <input type="text" class="form-control" id="city" name="city" value="${consumer.city}">
+                        <label for="city" class="form-label">Kota <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="city" name="city" value="${consumer.city}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="province" class="form-label">Provinsi</label>
-                        <input type="text" class="form-control" id="province" name="province" value="${consumer.province}">
+                        <label for="province" class="form-label">Provinsi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="province" name="province" value="${consumer.province}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status</label>

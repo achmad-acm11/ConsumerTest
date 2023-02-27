@@ -2,9 +2,14 @@ package com.example.javasalttest.service;
 
 import com.example.javasalttest.entity.Consumer;
 import com.example.javasalttest.entity.Status;
+import com.example.javasalttest.exception.BadRequestException;
+import com.example.javasalttest.exception.NotFoundException;
 import com.example.javasalttest.repository.ConsumerRepository;
 import com.example.javasalttest.requests.ConsumerRequest;
 import com.example.javasalttest.requests.DatatableRequest;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +23,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,10 +35,14 @@ class ConsumerServiceImplTest {
     @Mock
     private ConsumerRepository repository;
     private ConsumerService service;
+    private Validator validator;
+    private ValidatorFactory validatorFactory;
 
     @BeforeEach
     void setUp() {
-        service = new ConsumerServiceImpl(repository);
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+        service = new ConsumerServiceImpl(repository,validator);
     }
 
     @Test
@@ -65,6 +76,18 @@ class ConsumerServiceImplTest {
     }
 
     @Test
+    void createConsumerBadRequest() {
+        ConsumerRequest request = ConsumerRequest.builder()
+                .address("Jl. Sejahtera")
+                .city("Bogor")
+                .province("Jawa Barat")
+                .build();
+
+        assertThatThrownBy(() -> service.createConsumer(request))
+                .isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
     void detailConsumer() {
         given(repository.findById(1L)).willReturn(
                 Optional.ofNullable(Consumer.builder()
@@ -78,6 +101,13 @@ class ConsumerServiceImplTest {
         service.detailConsumer(1L);
 
         verify(repository).findById(1L);
+    }
+
+    @Test
+    void detailConsumerNotFound() {
+        assertThatThrownBy(() -> service.detailConsumer(1L))
+                .isInstanceOf(NotFoundException.class)
+                        .hasMessageContaining("Consumer not found");
     }
 
     @Test
@@ -105,10 +135,28 @@ class ConsumerServiceImplTest {
     }
 
     @Test
+    void updateConsumerNotFound() {
+        assertThatThrownBy(() -> service.updateConsumer(null, 1L))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Consumer not found");
+        verify(repository).findById(1L);
+        verify(repository, never()).save(any());
+    }
+
+    @Test
     void deleteConsumer() {
         service.deleteConsumer(1L);
 
         verify(repository).deleteById(1L);
+    }
+
+    @Test
+    void deleteConsumerNotFound() {
+        assertThatThrownBy(() -> service.deleteConsumer(1L))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Consumer not found");
+        verify(repository).findById(1L);
+        verify(repository, never()).deleteById(1L);
     }
 
     @Test

@@ -40,8 +40,13 @@ public class ConsumerController {
 
     @GetMapping("/edit/{id}")
     public String editView(Model model, @PathVariable("id") Long id) {
-        Consumer consumer = service.detailConsumer(id);
-        System.out.println(consumer);
+        Consumer consumer = new Consumer();
+        try {
+             consumer = service.detailConsumer(id);
+        }catch (RuntimeException e){
+            return "404";
+        }
+
         model.addAttribute("consumer", consumer);
         return "updateForm";
     }

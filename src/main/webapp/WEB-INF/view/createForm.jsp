@@ -27,20 +27,20 @@
                 <p class="h3">Create Consumer</p>
                 <form id="add_form" method="post">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="name" name="name">
+                        <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Alamat</label>
                         <textarea class="form-control" id="address" rows="3" name="address"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="city" class="form-label">Kota</label>
-                        <input type="text" class="form-control" id="city" name="city">
+                        <label for="city" class="form-label">Kota <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="city" name="city" required>
                     </div>
                     <div class="mb-3">
-                        <label for="province" class="form-label">Provinsi</label>
-                        <input type="text" class="form-control" id="province" name="province">
+                        <label for="province" class="form-label">Provinsi <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="province" name="province" required>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="add_action()">Submit</button>
                     <a href="/consumer" class="btn btn-secondary">Back</a>
